@@ -34,7 +34,7 @@ class TestBNSCatalog:
         bns_data = catalog_class.bns_catalog()
 
         return catalog_class, bns_data, test_redshifts
-    
+
     def test_bns_catalog(self, monkeypatch):
         _, bns_table, test_redshifts = self._bns_data(monkeypatch)
 
@@ -80,7 +80,7 @@ class TestBNSCatalog:
 
         mag = source.point_source_magnitude("i")
         assert np.isfinite(mag)
-    
+
     def test_default_kwargs_kilonova(self):
         catalog_class = BNSCatalog(
             cosmo=self.cosmo,

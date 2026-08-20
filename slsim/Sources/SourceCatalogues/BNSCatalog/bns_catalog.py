@@ -3,8 +3,9 @@ from astropy import units
 from astropy.table import Table
 from slsim.Sources.Events.event_lightcone import EventLightcone
 
+
 class BNSCatalog:
-    """Class to generate a catalog of binary neutron star (BNS) merger events 
+    """Class to generate a catalog of binary neutron star (BNS) merger events
     within a selected sky area."""
 
     def __init__(
@@ -84,16 +85,16 @@ class BNSCatalog:
             "temperature_floor_2": 4000,
             "temperature_floor_3": 3000,
             "kappa_gamma": 10,
-    }
+        }
 
         if kwargs_kilonova is None:
             self._kwargs_kilonova = default_kwargs_kilonova
         else:
             self._kwargs_kilonova = {
-            **default_kwargs_kilonova,
-            **kwargs_kilonova,
-        }
-    
+                **default_kwargs_kilonova,
+                **kwargs_kilonova,
+            }
+
     def bns_catalog(self):
         redshifts = np.linspace(0, self._z_max, 500)
 
@@ -105,16 +106,16 @@ class BNSCatalog:
             time_interval=self._time_interval,
             model="BNS",
         )
-        #event time
+        # event time
         bns_redshifts = bns_lightcone.event_sample()
-        bns_table = Table({"z":bns_redshifts})
+        bns_table = Table({"z": bns_redshifts})
         bns_table["lightcurve_time"] = np.tile(
             self._lightcurve_time,
             (len(bns_table), 1),
         )
 
         bns_table["model_name"] = [self._model_name] * len(bns_table)
-        #bns_table["point_source_type"] = ["kilonova"] * len(bns_table)
+        # bns_table["point_source_type"] = ["kilonova"] * len(bns_table)
         bns_table["variability_model"] = ["light_curve"] * len(bns_table)
         bns_table["mag_zpsys"] = [self._mag_zpsys] * len(bns_table)
 
