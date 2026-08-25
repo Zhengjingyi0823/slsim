@@ -51,8 +51,9 @@ class BNSCatalog:
         :type noise: bool
         :param model_name: The kilonova light curve model to be used. The
             model name must match a model implemented in
-            ``redback.transient_models.kilonova_models``. If not provided, the
-            default model is ``mosfit_kilonova``.
+            ``redback.transient_models.kilonova_models``. The parameters in
+            ``kwargs_kilonova`` must match those required by the selected model. 
+            If not provided, the default model is ``mosfit_kilonova``.
         :type model_name: str
         :param mag_zpsys: Optional, AB or Vega (AB default)
         :type mag_zpsys: str or None
@@ -91,10 +92,10 @@ class BNSCatalog:
             self._kwargs_kilonova = default_kwargs_kilonova
         else:
             self._kwargs_kilonova = {
-                **default_kwargs_kilonova,
-                **kwargs_kilonova,
-            }
-
+            **default_kwargs_kilonova,
+            **kwargs_kilonova,
+        }
+    
     def bns_catalog(self):
         redshifts = np.linspace(0, self._z_max, 500)
 
@@ -106,7 +107,6 @@ class BNSCatalog:
             time_interval=self._time_interval,
             model="BNS",
         )
-        # event time
         bns_redshifts = bns_lightcone.event_sample()
         bns_table = Table({"z": bns_redshifts})
         bns_table["lightcurve_time"] = np.tile(
@@ -115,7 +115,6 @@ class BNSCatalog:
         )
 
         bns_table["model_name"] = [self._model_name] * len(bns_table)
-        # bns_table["point_source_type"] = ["kilonova"] * len(bns_table)
         bns_table["variability_model"] = ["light_curve"] * len(bns_table)
         bns_table["mag_zpsys"] = [self._mag_zpsys] * len(bns_table)
 
